@@ -61,8 +61,68 @@ WHERE c.id = p.catalog_id;
 SELECT * FROM catalogs;
 	
 	
+-- задание 3
+-- Пусть имеется таблица рейсов flights (id, from, to) и таблица городов cities (label, name). 
+-- Поля from, to и label содержат английские названия городов, поле name — русское. 
+-- Выведите список рейсов flights с русскими названиями городов.
 	
-	
-	
+DROP TABLE IF EXISTS flights;
+CREATE TABLE flights (
+	id SERIAL PRIMARY KEY,
+	`from` VARCHAR(255),
+	`to` VARCHAR(255)
+);
+
+DROP TABLE IF EXISTS cities;
+CREATE TABLE cities (
+	`label` VARCHAR(255) PRIMARY KEY,
+	`name` VARCHAR(255)
+);
+
+INSERT INTO flights (`from`, `to`)
+VALUES
+	('moscow', 'omsk'),
+	('novgorod', 'kazan'),
+	('irkutsk', 'moscow'),
+	('omsk', 'irkutsk'),
+	('moscow', 'kazan');
+SELECT * FROM flights;
+
+INSERT INTO cities (`label`, `name`)
+VALUES
+	('moscow', 'Москва'),
+	('irkutsk', 'Иркутск'),
+	('novgorod', 'Новгород'),
+	('kazan', 'Казань'),
+	('omsk', 'Омск');
+SELECT * FROM cities;
+
+SELECT `from` FROM flights; 
+SELECT name, `from` FROM flights 
+RIGHT JOIN cities ON label = `from`;
+
+SELECT id, (SELECT name FROM flights 
+RIGHT JOIN cities SOME 'label' = `from`) FROM flights;
+
+SELECT id, `from`, name FROM flights 
+JOIN cities
+SOME (SELECT name FROM flights 
+RIGHT JOIN cities ON 'label' = `from` WHERE 'label' = 'moscow');
+
+SELECT name FROM flights 
+RIGHT JOIN cities ON 'label' = `from`;
+
+
+SELECT `from` FROM cities
+RIGHT JOIN flights ON `from` = 'label';
+
+
+
+
+
+
+
+
+
 	
 	
